@@ -59,6 +59,7 @@ body {
 }
 @keyframes dotFade { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(0.1); } }
 @keyframes sparkFade { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-18px) scale(0.4); } }
+@keyframes tapRipple { from { transform: scale(0); opacity: 1; } to { transform: scale(2.5); opacity: 0; } }
 
 /* COSMIC BG GLOWS */
 .cosmic-bg {
@@ -1148,8 +1149,9 @@ sessionStorage.clear();
   requestAnimationFrame(draw);
 })();
 
-// CURSOR TRAIL
+// CURSOR TRAIL — desktop only
 (function() {
+  if ('ontouchstart' in window) return;
   let moveCount = 0;
   const colors = ['#1cd6e7', '#8051c8', '#f62bd1', '#f4a749'];
   document.addEventListener('mousemove', function(e) {
@@ -1171,6 +1173,29 @@ sessionStorage.clear();
       setTimeout(() => spark.remove(), 900);
     }
   });
+})();
+
+// TAP RIPPLE — mobile only
+(function() {
+  if (!('ontouchstart' in window)) return;
+  document.addEventListener('touchstart', function(e) {
+    const touch = e.touches[0];
+    const ripple = document.createElement('div');
+    ripple.style.cssText = `
+      position:fixed;
+      left:${touch.clientX - 30}px;
+      top:${touch.clientY - 30}px;
+      width:60px;height:60px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(28,214,231,0.45) 0%, transparent 70%);
+      pointer-events:none;
+      z-index:9999;
+      transform:scale(0);
+      animation:tapRipple 0.5s ease forwards;
+    `;
+    document.body.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 500);
+  }, { passive: true });
 })();
 
 function saveToStorage(id) {
