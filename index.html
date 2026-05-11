@@ -3,1237 +3,747 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Step 3: Grieve and Release | Timeline Jumpers</title>
+<title>Step 3 — Grieve and Release | Timeline Jumpers</title>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cyan: #1cd6e7;
+    --magenta: #f62bd1;
+    --purple: #8051c8;
+    --amber: #f4a749;
+    --bg: #0a0a1f;
+    --mid: #15122e;
+    --card: rgba(30,26,62,0.6);
+    --border: rgba(255,255,255,0.08);
+    --glow-border: rgba(28,214,231,0.35);
+    --text: #f8f5ff;
+    --text-sec: rgba(248,245,255,0.72);
+    --gradient: linear-gradient(135deg, #1cd6e7, #8051c8, #f62bd1);
+  }
 
-:root {
-  --cyan: #1cd6e7;
-  --magenta: #f62bd1;
-  --purple: #8051c8;
-  --amber: #f4a749;
-  --bg: #0a0a1f;
-  --mid: #15122e;
-  --card: rgba(30,26,62,0.6);
-  --border: rgba(255,255,255,0.08);
-  --glow-border: rgba(28,214,231,0.35);
-  --text: #f8f5ff;
-  --text-sec: rgba(248,245,255,0.72);
-  --gradient: linear-gradient(135deg, #1cd6e7, #8051c8, #f62bd1);
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  min-height: 100vh;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
+  body {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: none;
+  }
 
-/* STARS */
-#stars-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
+  /* ── STARS ── */
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .star {
+    position: absolute; border-radius: 50%; background: #fff;
+    animation: twinkle var(--dur,3s) ease-in-out infinite var(--delay,0s); opacity: 0;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity:0; transform:scale(0.8); }
+    50% { opacity:var(--op,0.6); transform:scale(1); }
+  }
 
-/* CURSOR TRAIL */
-.cursor-dot {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  animation: dotFade 0.7s ease forwards;
-}
-.cursor-spark {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  font-size: 13px;
-  animation: sparkFade 0.9s ease forwards;
-}
-@keyframes dotFade { from { opacity: 0.9; transform: scale(1); } to { opacity: 0; transform: scale(0.1); } }
-@keyframes sparkFade { from { opacity: 1; transform: translateY(0) scale(1); } to { opacity: 0; transform: translateY(-18px) scale(0.4); } }
-@keyframes tapRipple { from { transform: scale(0); opacity: 1; } to { transform: scale(2.5); opacity: 0; } }
+  /* ── COSMIC BG ── */
+  .cosmic-bg { position:fixed; inset:0; pointer-events:none; z-index:0; }
+  .cosmic-bg::before {
+    content:''; position:absolute; top:-20%; left:-10%; width:60%; height:60%;
+    background:radial-gradient(ellipse,rgba(28,214,231,0.07) 0%,transparent 70%);
+  }
+  .cosmic-bg::after {
+    content:''; position:absolute; bottom:-10%; right:-10%; width:55%; height:55%;
+    background:radial-gradient(ellipse,rgba(246,43,209,0.07) 0%,transparent 70%);
+  }
+  .cosmic-mid {
+    position:fixed; top:40%; left:30%; width:50%; height:50%;
+    background:radial-gradient(ellipse,rgba(128,81,200,0.06) 0%,transparent 70%);
+    pointer-events:none; z-index:0;
+  }
 
-/* COSMIC BG GLOWS */
-.cosmic-bg {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-.cosmic-bg::before {
-  content: '';
-  position: absolute;
-  top: -20%; left: -10%;
-  width: 60%; height: 60%;
-  background: radial-gradient(circle, rgba(28,214,231,0.07) 0%, transparent 70%);
-}
-.cosmic-bg::after {
-  content: '';
-  position: absolute;
-  bottom: -10%; right: -10%;
-  width: 55%; height: 55%;
-  background: radial-gradient(circle, rgba(128,81,200,0.08) 0%, transparent 70%);
-}
-.cosmic-glow-3 {
-  position: fixed;
-  top: 40%; left: 60%;
-  width: 40%; height: 40%;
-  background: radial-gradient(circle, rgba(246,43,209,0.06) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
+  /* ── CURSOR ── */
+  .cursor-dot {
+    position:fixed; border-radius:50%; pointer-events:none; z-index:9999;
+    transform:translate(-50%,-50%); animation:dotFade 0.6s ease forwards;
+  }
+  @keyframes dotFade {
+    0% { opacity:0.9; transform:translate(-50%,-50%) scale(1); }
+    100% { opacity:0; transform:translate(-50%,-50%) scale(0.2); }
+  }
+  .cursor-sparkle {
+    position:fixed; pointer-events:none; z-index:9999; font-size:12px;
+    transform:translate(-50%,-50%); animation:sparkleFade 0.8s ease forwards;
+  }
+  @keyframes sparkleFade {
+    0% { opacity:1; transform:translate(-50%,-50%) scale(1); }
+    100% { opacity:0; transform:translate(-50%,-120%) scale(0.5); }
+  }
+  @keyframes tapRipple { from{transform:scale(0);opacity:1;} to{transform:scale(2.5);opacity:0;} }
 
-/* all content above bg layers */
-body > *:not(#stars-canvas):not(.cosmic-bg):not(.cosmic-glow-3):not(.cursor-dot):not(.cursor-spark) { position: relative; z-index: 1; }
+  /* ── LAYOUT ── */
+  .page-wrap { position:relative; z-index:1; }
 
-/* INTENTION BLOCK */
-.intention-block {
-  padding: 32px 24px;
-  text-align: center;
-  background: rgba(15,12,38,0.7);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-}
-.intention-eyebrow {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 14px;
-}
-.intention-declaration {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: clamp(16px, 3vw, 20px);
-  color: #ffffff;
-  line-height: 1.3;
-  max-width: 600px;
-  margin: 0 auto 14px;
-}
-.intention-sub {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
-}
+  /* ── INTENTION BLOCK ── */
+  .intention-block {
+    width:100%; padding:32px 40px; text-align:center;
+    position:relative; background:var(--mid);
+    border-bottom:1px solid var(--border); overflow:hidden;
+  }
+  .intention-block::after {
+    content:''; position:absolute; top:0; left:0; right:0;
+    height:2px; background:var(--gradient);
+  }
+  .phase-eyebrow {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan);
+    margin-bottom:14px; text-shadow:0 0 12px rgba(28,214,231,0.7),0 0 24px rgba(28,214,231,0.3);
+  }
+  .intention-statement {
+    font-family:'Fraunces',serif; font-weight:700;
+    font-size:clamp(16px,3vw,20px); color:var(--text);
+    line-height:1.4; max-width:620px; margin:0 auto;
+  }
+  .intention-subtext {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:9px;
+    letter-spacing:0.24em; text-transform:uppercase;
+    color:rgba(248,245,255,0.3); margin-top:14px;
+  }
 
-/* PROGRESS BAR */
-.progress-section {
-  background: rgba(21,18,46,0.8);
-  border-bottom: 1px solid var(--border);
-  padding: 16px 32px;
-}
-.progress-inner {
-  max-width: 720px;
-  margin: 0 auto;
-}
-.progress-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-.progress-phase-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cyan);
-}
-.progress-step-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 12px;
-  color: var(--cyan);
-  letter-spacing: 0.06em;
-}
-.progress-track {
-  width: 100%;
-  height: 2px;
-  background: var(--border);
-  border-radius: 2px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  width: 42.86%;
-  background: var(--gradient);
-  border-radius: 2px;
-}
+  /* ── PROGRESS BAR ── */
+  .progress-section { background:var(--mid); border-bottom:1px solid var(--border); padding:18px 40px; }
+  .progress-inner { max-width:720px; margin:0 auto; padding:0 24px; }
+  .progress-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+  .progress-label { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:var(--text-sec); }
+  .progress-count { font-family:'Inter',sans-serif; font-weight:400; font-size:11px; color:var(--text-sec); }
+  .progress-track { height:2px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--gradient); border-radius:2px; }
 
-/* MAIN CONTENT */
-.content-wrap {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 0 24px 80px;
-}
+  /* ── MAIN CONTENT ── */
+  .main-content { max-width:720px; margin:0 auto; padding:0 24px 80px; }
 
-/* STEP HEADER */
-.step-header { padding: 52px 0 36px; }
-.step-badge-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-.step-badge {
-  background: var(--gradient);
-  color: #fff;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 5px 14px;
-  border-radius: 30px;
-}
-.step-phase-eyebrow {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-sec);
-}
-.step-title {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: clamp(28px, 5vw, 44px);
-  color: var(--text);
-  line-height: 1.15;
-  margin-bottom: 10px;
-}
-.step-title .title-gradient {
-  background: var(--gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-style: italic;
-}
-.step-subtitle {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text-sec);
-  letter-spacing: 0.04em;
-}
+  /* ── STEP HEADER ── */
+  .step-header {
+    padding:52px 0 36px; border-bottom:1px solid var(--border);
+    margin-bottom:40px; opacity:0; animation:fadeUp 0.6s ease 0.1s forwards;
+  }
+  .step-eyebrow {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.22em; text-transform:uppercase; color:var(--text-sec);
+    margin-bottom:14px; display:flex; align-items:center; gap:10px;
+  }
+  .step-number-badge-pill {
+    display:inline-flex; align-items:center; justify-content:center;
+    background:var(--cyan); color:#0a0a1f; font-family:'Inter',sans-serif;
+    font-weight:600; font-size:10px; letter-spacing:0.14em;
+    text-transform:uppercase; padding:4px 10px; border-radius:30px; flex-shrink:0;
+  }
+  .step-title {
+    font-family:'Fraunces',serif; font-weight:700;
+    font-size:clamp(28px,5vw,40px); color:var(--text);
+    line-height:1.15; margin-bottom:12px;
+  }
+  .step-title .gradient-word {
+    background:var(--gradient); -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent; background-clip:text; font-style:italic;
+  }
+  .step-subtitle { font-family:'Inter',sans-serif; font-weight:300; font-size:15px; color:var(--text-sec); line-height:1.7; }
 
-/* DIVIDER */
-.section-divider {
-  width: 40px;
-  height: 2px;
-  background: var(--gradient);
-  margin: 32px 0;
-  border-radius: 2px;
-}
+  /* ── SECTION BLOCKS ── */
+  .section-block { margin-bottom:40px; opacity:0; animation:fadeUp 0.6s ease forwards; }
+  .section-block:nth-child(2) { animation-delay:0.2s; }
+  .section-block:nth-child(3) { animation-delay:0.3s; }
+  .section-block:nth-child(4) { animation-delay:0.4s; }
+  .section-block:nth-child(5) { animation-delay:0.5s; }
 
-/* TEACHING COPY */
-.teaching-copy {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 40px;
-}
-.teaching-copy p {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 15px;
-  line-height: 1.85;
-  color: var(--text-sec);
-}
+  /* ── CANONICAL section-label ── */
+  .section-label {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:9px;
+    letter-spacing:0.24em; text-transform:uppercase; color:var(--cyan);
+    margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border);
+  }
 
-/* SOMATIC BLOCK */
-.somatic-block {
-  position: relative;
-  background: var(--card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 28px 28px 28px 36px;
-  margin-bottom: 48px;
-  overflow: hidden;
-}
-.somatic-ring-wrap {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-}
-.breathing-ring {
-  flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  position: relative;
-  margin-top: 2px;
-}
-.breathing-ring circle {
-  transform-origin: 22px 22px;
-  animation: breathe 4s ease-in-out infinite;
-}
-.breathing-ring circle:nth-child(2) { animation-delay: 0.4s; }
-.breathing-ring circle:nth-child(3) { animation-delay: 0.8s; }
-@keyframes breathe {
-  0%, 100% { opacity: 0.25; transform: scale(0.92); }
-  50% { opacity: 0.7; transform: scale(1.08); }
-}
-.somatic-content { flex: 1; }
-.somatic-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 10px;
-}
-.somatic-block p {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.75;
-  color: var(--text-sec);
-}
+  /* ── TEACHING COPY ── */
+  .teaching-copy p { font-family:'Inter',sans-serif; font-weight:300; font-size:15px; line-height:1.85; color:var(--text-sec); margin-bottom:16px; }
+  .teaching-copy p:last-child { margin-bottom:0; }
 
-/* SECTION HEADINGS */
-.reflection-heading {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-.reflection-sub {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--text-sec);
-  margin-bottom: 24px;
-}
+  /* ── SOMATIC BLOCK ── */
+  .somatic-block {
+    background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--glow-border); border-radius:16px;
+    padding:36px 40px 32px; margin-bottom:40px;
+    text-align:center; transition:box-shadow 0.3s;
+  }
+  .somatic-block:hover { box-shadow:0 0 28px rgba(28,214,231,0.1); }
+  .breathing-ring { width:72px; height:72px; margin:0 auto 20px; position:relative; display:flex; align-items:center; justify-content:center; }
+  .breathing-ring span { position:absolute; border-radius:50%; animation:breathe 4s ease-in-out infinite; }
+  .breathing-ring span:nth-child(1) { width:24px;height:24px;animation-delay:0s;  border:1.5px solid rgba(28,214,231,0.7); }
+  .breathing-ring span:nth-child(2) { width:44px;height:44px;animation-delay:0.4s;border:1.5px solid rgba(28,214,231,0.4); }
+  .breathing-ring span:nth-child(3) { width:64px;height:64px;animation-delay:0.8s;border:1.5px solid rgba(28,214,231,0.15); }
+  @keyframes breathe {
+    0%,100% { transform:scale(0.92); opacity:0.6; }
+    50% { transform:scale(1.06); opacity:1; }
+  }
+  .somatic-heading { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px; }
+  .somatic-block p { font-family:'Inter',sans-serif; font-weight:400; font-size:14px; line-height:1.8; color:var(--text-sec); max-width:480px; margin:0 auto; }
 
-/* TAB NAV */
-.tab-nav {
-  display: flex;
-  gap: 0;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 32px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.tab-nav::-webkit-scrollbar { display: none; }
-.tab-btn {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 12px 18px;
-  border: none;
-  background: transparent;
-  color: var(--text-sec);
-  cursor: pointer;
-  border-bottom: 2px solid transparent;
-  margin-bottom: -1px;
-  white-space: nowrap;
-  transition: color 0.2s, border-color 0.2s;
-}
-.tab-btn.active { color: var(--cyan); border-bottom-color: var(--cyan); }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
+  /* ── LAYER NAV (underline tabs) ── */
+  .layer-nav { display:flex; gap:4px; margin-bottom:24px; border-bottom:1px solid var(--border); }
+  .layer-tab {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    padding:10px 16px 12px; border:none; background:none;
+    color:var(--text-sec); cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+    transition:color 0.2s,border-color 0.2s; white-space:nowrap;
+  }
+  .layer-tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+  .layer-tab:hover:not(.active) { color:var(--text); }
 
-/* PILL TAB NAV — Ways to Release */
-.tab-nav--pills {
-  border-bottom: none;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 28px;
-  padding-bottom: 4px;
-}
-.tab-nav--pills .tab-btn {
-  border: 1.5px solid rgba(255,255,255,0.15);
-  border-bottom: 1.5px solid rgba(255,255,255,0.15);
-  border-radius: 30px;
-  padding: 8px 16px;
-  margin-bottom: 0;
-  color: var(--text-sec);
-  background: transparent;
-  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
-}
-.tab-nav--pills .tab-btn:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
-}
-.tab-nav--pills .tab-btn.active {
-  background: var(--cyan);
-  border-color: var(--cyan);
-  color: #0a0a1f;
-  box-shadow: 0 0 16px rgba(28,214,231,0.4);
-}
+  /* ── PILL NAV (Ways to Release) ── */
+  .pill-nav { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
+  .pill-tab {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.12em; text-transform:uppercase;
+    padding:8px 16px; border:1.5px solid rgba(255,255,255,0.15);
+    border-radius:30px; background:transparent; color:var(--text-sec);
+    cursor:pointer; transition:all 0.2s;
+  }
+  .pill-tab:hover { border-color:var(--cyan); color:var(--cyan); }
+  .pill-tab.active { background:var(--cyan); border-color:var(--cyan); color:#0a0a1f; box-shadow:0 0 16px rgba(28,214,231,0.4); }
 
-/* REFLECTION CARDS */
-.reflection-section { margin-bottom: 48px; }
-.release-section { margin-bottom: 40px; }
+  .reflection-layer { display:none; }
+  .reflection-layer.active { display:block; }
+  .release-layer { display:none; }
+  .release-layer.active { display:block; }
 
-.reflection-card {
-  background: var(--card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 22px 24px;
-  margin-bottom: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.reflection-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 30px rgba(28,214,231,0.15), 0 0 60px rgba(28,214,231,0.06);
-}
-.reflection-starter {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 8px;
-}
-.reflection-card p {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text-sec);
-  line-height: 1.7;
-}
+  /* ── REFLECTION CARD ── */
+  .reflection-card {
+    background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--border); border-left:3px solid var(--cyan);
+    border-radius:0 12px 12px 0; padding:28px 28px 24px; margin-bottom:16px;
+    box-shadow:0 0 18px rgba(28,214,231,0.08),0 0 40px rgba(28,214,231,0.04);
+    transition:box-shadow 0.3s;
+  }
+  .reflection-card:hover { box-shadow:0 0 24px rgba(28,214,231,0.18),0 0 60px rgba(28,214,231,0.08); }
+  .reflection-prompt { font-family:'Inter',sans-serif; font-weight:400; font-size:14px; line-height:1.8; color:var(--text-sec); margin-bottom:18px; }
+  .starter-phrase { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--cyan); letter-spacing:0.04em; margin-bottom:10px; display:block; }
 
-/* TEXTAREA */
-textarea {
-  width: 100%;
-  min-height: 120px;
-  background: rgba(15,12,38,0.6);
-  border: 1px solid var(--border);
-  border-top: 2px solid var(--cyan);
-  border-radius: 0 0 8px 8px;
-  padding: 16px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.7;
-  resize: vertical;
-  outline: none;
-  transition: box-shadow 0.2s, border-color 0.2s;
-  margin-bottom: 12px;
-}
-textarea:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 3px rgba(28,214,231,0.12), inset 0 0 20px rgba(28,214,231,0.04);
-}
+  textarea {
+    width:100%; min-height:120px; background:rgba(10,10,31,0.6);
+    border:1px solid var(--border); border-top:2px solid var(--cyan);
+    border-radius:8px; padding:14px 16px;
+    font-family:'Inter',sans-serif; font-weight:300; font-size:14px;
+    line-height:1.7; color:var(--text); resize:vertical;
+    transition:border-color 0.2s,box-shadow 0.2s; outline:none;
+  }
+  textarea:focus { border-top-color:var(--cyan); box-shadow:0 0 0 3px rgba(28,214,231,0.12),inset 0 0 20px rgba(28,214,231,0.04); }
+  textarea::placeholder { color:rgba(248,245,255,0.25); font-weight:300; }
 
-/* SAVE NOTICE */
-.save-notice {
-  border-left: 3px solid var(--cyan);
-  padding: 10px 14px;
-  background: rgba(28,214,231,0.04);
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 12px;
-  color: var(--text-sec);
-  line-height: 1.6;
-  margin-bottom: 0;
-  border-radius: 0 4px 4px 0;
-}
+  /* ── LAYER CONTROLS ── */
+  .layer-controls {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-top:20px; padding-top:20px; border-top:1px solid var(--border);
+  }
+  .btn-ghost {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:11px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.6);
+    color:rgba(255,255,255,0.9); padding:10px 20px; border-radius:30px;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .btn-ghost:hover { background:rgba(255,255,255,0.08); border-color:var(--cyan); color:var(--cyan); }
+  .btn-primary {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:11px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    background:var(--gradient); border:none; color:#fff;
+    padding:10px 22px; border-radius:30px; cursor:pointer;
+    transition:opacity 0.2s,transform 0.2s;
+  }
+  .btn-primary:hover { opacity:0.85; transform:translateY(-1px); }
 
-/* LAYER NAV */
-.layer-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-.btn-ghost {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 11px 24px;
-  border: 1.5px solid rgba(255,255,255,0.6);
-  border-radius: 30px;
-  background: rgba(255,255,255,0.04);
-  color: rgba(255,255,255,0.9);
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-  backdrop-filter: blur(8px);
-}
-.btn-ghost:hover { background: rgba(255,255,255,0.08); }
-.btn-forward {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 11px 24px;
-  border: none;
-  border-radius: 30px;
-  background: var(--gradient);
-  color: #fff;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-forward:hover { opacity: 0.85; }
-.btn-done {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 11px 24px;
-  border: none;
-  border-radius: 30px;
-  background: var(--gradient);
-  color: #fff;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-done:hover { opacity: 0.85; }
-.step-complete-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.1em;
-  color: var(--cyan);
-  display: none;
-  margin-left: auto;
-}
+  /* ── COPY RESPONSES ── */
+  .btn-copy-responses {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:11px;
+    letter-spacing:0.14em; text-transform:uppercase;
+    background:var(--gradient); border:none; color:#fff;
+    padding:12px 28px; border-radius:30px; cursor:pointer;
+    transition:opacity 0.2s,transform 0.2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn-copy-responses:hover { opacity:0.85; transform:translateY(-1px); }
+  .copy-confirm {
+    font-family:'Inter',sans-serif; font-weight:600; font-size:10px;
+    letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan);
+    opacity:0; transition:opacity 0.3s; min-height:16px;
+  }
+  .copy-confirm.show { opacity:1; }
 
-/* TOOL LIST */
-.tool-list { display: flex; flex-direction: column; gap: 0; }
-.tool-item {
-  padding: 18px 0;
-  border-bottom: 1px solid var(--border);
-}
-.tool-item:last-child { border-bottom: none; }
-.tool-name {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 13px;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.tool-desc {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--text-sec);
-  line-height: 1.7;
-}
+  /* ── TOOL LIST ── */
+  .tool-list { display:flex; flex-direction:column; }
+  .tool-item { padding:18px 0; border-bottom:1px solid var(--border); }
+  .tool-item:last-child { border-bottom:none; }
+  .tool-name { font-family:'Inter',sans-serif; font-weight:600; font-size:13px; color:var(--text); margin-bottom:4px; }
+  .tool-desc { font-family:'Inter',sans-serif; font-weight:300; font-size:13px; color:var(--text-sec); line-height:1.7; }
 
-/* PARTS / HOOPONOPONO / FORGIVENESS CARDS */
-.parts-section {
-  background: var(--card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 24px;
-  margin-bottom: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.parts-section:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 30px rgba(28,214,231,0.15), 0 0 60px rgba(28,214,231,0.06);
-}
-.parts-title {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-.parts-desc {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--text-sec);
-  margin-bottom: 20px;
-  line-height: 1.7;
-}
-.parts-step { margin-bottom: 18px; }
-.parts-step:last-child { margin-bottom: 0; }
-.parts-step-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 5px;
-}
-.parts-step p {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--text-sec);
-  line-height: 1.65;
-}
-.hooponopono-block { padding: 4px 0; }
-.phrase-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-.phrase-item {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: 20px;
-  color: var(--text);
-  padding: 14px 18px;
-  background: var(--card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--cyan);
-  border-radius: 0 8px 8px 0;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.phrase-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 24px rgba(28,214,231,0.15);
-}
-.phrase-item--open {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  color: var(--text-sec);
-  border-left-color: rgba(255,255,255,0.15);
-}
-.phrase-blank { color: var(--cyan); }
+  /* ── PARTS / GUIDE CARDS ── */
+  .guide-card {
+    background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--border); border-radius:12px;
+    padding:24px; margin-bottom:16px; transition:box-shadow 0.3s;
+  }
+  .guide-card:hover { box-shadow:0 0 24px rgba(28,214,231,0.12); }
+  .guide-title { font-family:'Fraunces',serif; font-weight:700; font-size:18px; color:var(--text); margin-bottom:8px; }
+  .guide-desc { font-family:'Inter',sans-serif; font-weight:300; font-size:13px; color:var(--text-sec); margin-bottom:20px; line-height:1.7; }
+  .guide-step { margin-bottom:18px; }
+  .guide-step:last-child { margin-bottom:0; }
+  .guide-step-label { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--cyan); margin-bottom:5px; }
+  .guide-step p { font-family:'Inter',sans-serif; font-weight:300; font-size:13px; color:var(--text-sec); line-height:1.65; }
 
-/* EFT */
-.eft-what {
-  margin-bottom: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
-}
-.eft-what p {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text-sec);
-  line-height: 1.75;
-}
-.eft-steps {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 28px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border);
-}
-.eft-step {
-  padding: 14px 16px;
-  background: var(--card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.eft-step:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 24px rgba(28,214,231,0.12);
-}
-.eft-step--note {
-  background: rgba(28,214,231,0.05);
-  border-color: transparent;
-  border-left: 3px solid var(--cyan);
-  border-radius: 0 8px 8px 0;
-}
-.eft-step--note:hover { box-shadow: none; transform: none; }
-.eft-step-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 6px;
-}
-.eft-step-body {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--text-sec);
-  line-height: 1.7;
-}
-.eft-highlight { font-weight: 500; color: var(--text); }
-.eft-layout {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-.eft-diagram-wrap { flex: 0 0 auto; width: 240px; }
-.eft-svg { width: 100%; height: auto; }
-.eft-sequence { flex: 1; display: flex; flex-direction: column; }
-.eft-point-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 9px 0;
-  border-bottom: 1px solid var(--border);
-}
-.eft-point-row:last-child { border-bottom: none; }
-.eft-num {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 10px;
-  color: #0a0a1f;
-  background: var(--cyan);
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-.eft-point-info { display: flex; flex-direction: column; gap: 2px; }
-.eft-label {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  color: var(--text);
-}
-.eft-note {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 11px;
-  color: var(--text-sec);
-  line-height: 1.5;
-}
+  /* ── HOOPONOPONO ── */
+  .phrase-list { display:flex; flex-direction:column; gap:10px; margin-top:20px; }
+  .phrase-item {
+    font-family:'Fraunces',serif; font-weight:700; font-size:20px; color:var(--text);
+    padding:14px 18px; background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--border); border-left:3px solid var(--cyan);
+    border-radius:0 8px 8px 0; transition:transform 0.2s,box-shadow 0.2s;
+  }
+  .phrase-item:hover { transform:translateY(-2px); box-shadow:0 0 24px rgba(28,214,231,0.15); }
+  .phrase-item--open { font-style:italic; color:var(--text-sec); border-left-color:rgba(255,255,255,0.15); background:rgba(255,255,255,0.03); }
+  .phrase-blank { color:var(--cyan); font-style:normal; }
 
-/* EXPORT */
-.export-section {
-  background: var(--card);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 32px;
-  margin-top: 48px;
-  transition: box-shadow 0.2s;
-}
-.export-section:hover {
-  box-shadow: 0 0 40px rgba(28,214,231,0.1);
-}
-.export-heading {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: 22px;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-.export-desc {
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--text-sec);
-  margin-bottom: 20px;
-  line-height: 1.65;
-}
-.btn-copy {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  padding: 13px 32px;
-  border: none;
-  border-radius: 30px;
-  background: var(--gradient);
-  color: #fff;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.btn-copy:hover { opacity: 0.85; }
+  /* ── EFT ── */
+  .eft-intro { font-family:'Inter',sans-serif; font-weight:300; font-size:14px; color:var(--text-sec); line-height:1.75; margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+  .eft-steps { display:flex; flex-direction:column; gap:12px; margin-bottom:28px; padding-bottom:24px; border-bottom:1px solid var(--border); }
+  .eft-step { padding:14px 16px; background:var(--card); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:8px; transition:transform 0.2s,box-shadow 0.2s; }
+  .eft-step:hover { transform:translateY(-2px); box-shadow:0 0 24px rgba(28,214,231,0.12); }
+  .eft-step--note { background:rgba(28,214,231,0.05); border-color:transparent; border-left:3px solid var(--cyan); border-radius:0 8px 8px 0; }
+  .eft-step--note:hover { box-shadow:none; transform:none; }
+  .eft-step-label { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--cyan); margin-bottom:6px; }
+  .eft-step-body { font-family:'Inter',sans-serif; font-weight:300; font-size:13px; color:var(--text-sec); line-height:1.7; }
+  .eft-highlight { font-weight:500; color:var(--text); }
+  .eft-layout { display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap; }
+  .eft-diagram-wrap { flex:0 0 auto; width:240px; }
+  .eft-svg { width:100%; height:auto; }
+  .eft-sequence { flex:1; display:flex; flex-direction:column; }
+  .eft-point-row { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); }
+  .eft-point-row:last-child { border-bottom:none; }
+  .eft-num { font-family:'Inter',sans-serif; font-weight:600; font-size:10px; color:#0a0a1f; background:var(--cyan); width:18px; height:18px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .eft-point-info { display:flex; flex-direction:column; gap:2px; }
+  .eft-label { font-family:'Inter',sans-serif; font-weight:600; font-size:12px; color:var(--text); }
+  .eft-note { font-family:'Inter',sans-serif; font-weight:300; font-size:11px; color:var(--text-sec); line-height:1.5; }
 
-/* SKOOL BUTTON */
-.skool-btn-wrap {
-  padding: 0 24px 48px;
-  max-width: 760px;
-  margin: 24px auto 0;
-}
-.btn-skool {
-  display: block;
-  width: 100%;
-  text-align: center;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 12px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding: 16px 32px;
-  border: none;
-  border-radius: 30px;
-  background: var(--gradient);
-  color: #fff;
-  cursor: pointer;
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-.btn-skool:hover { opacity: 0.85; }
+  /* ── EXPORT ── */
+  .export-section {
+    margin-top:48px; background:var(--card); backdrop-filter:blur(20px);
+    border:1px solid var(--border); border-radius:16px; padding:32px;
+    opacity:0; animation:fadeUp 0.6s ease 0.8s forwards;
+  }
+  .save-title { font-family:'Fraunces',serif; font-weight:700; font-size:22px; color:var(--text); margin-bottom:6px; }
+  .save-description { font-family:'Inter',sans-serif; font-weight:300; font-size:13px; color:var(--text-sec); line-height:1.6; }
 
-/* COPYRIGHT */
-.copyright-bar {
-  text-align: center;
-  padding: 20px 24px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 300;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  color: rgba(248,245,255,0.3);
-  border-top: 1px solid var(--border);
-  position: relative;
-  z-index: 1;
-}
+  /* ── FOOTER STACK ── */
+  .footer-stack { margin-top:20px; display:flex; flex-direction:column; gap:12px; }
+  .btn-next-step {
+    display:block; width:100%; padding:18px 24px; background:var(--gradient);
+    color:#fff; font-family:'Inter',sans-serif; font-weight:600; font-size:12px;
+    letter-spacing:0.16em; text-transform:uppercase; text-align:center;
+    text-decoration:none; border-radius:30px; transition:opacity 0.2s; border:none;
+  }
+  .btn-next-step:hover { opacity:0.85; }
+  .btn-skool {
+    display:block; width:100%; padding:18px 24px;
+    background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.9);
+    border:1px solid rgba(255,255,255,0.6); font-family:'Inter',sans-serif;
+    font-weight:600; font-size:12px; letter-spacing:0.16em; text-transform:uppercase;
+    text-align:center; text-decoration:none; border-radius:30px; transition:all 0.2s;
+  }
+  .btn-skool:hover { background:rgba(255,255,255,0.09); border-color:#fff; }
 
-/* TOAST */
-.toast {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%) translateY(20px);
-  background: var(--mid);
-  border: 1px solid var(--glow-border);
-  color: var(--text);
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  padding: 12px 24px;
-  border-radius: 30px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, transform 0.3s;
-  z-index: 1000;
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
 
-/* MOBILE */
-@media (max-width: 600px) {
-  .content-wrap { padding: 0 16px 60px; }
-  .eft-layout { flex-direction: column; }
-  .eft-diagram-wrap { width: 100%; max-width: 280px; margin: 0 auto; }
-}
+  .copyright { text-align:center; padding:32px 24px; font-family:'Inter',sans-serif; font-weight:300; font-size:11px; letter-spacing:0.08em; color:rgba(248,245,255,0.25); border-top:1px solid var(--border); }
+
+  @media (max-width:600px) {
+    .intention-block { padding:24px 20px; }
+    .progress-section { padding:14px 20px; }
+    .step-header { padding:36px 0 24px; }
+    .layer-controls { flex-direction:column; gap:12px; }
+    .layer-controls .btn-ghost,
+    .layer-controls .btn-primary { width:100%; text-align:center; justify-content:center; }
+    .export-section { padding:24px 20px; }
+    .eft-layout { flex-direction:column; }
+    .eft-diagram-wrap { width:100%; max-width:280px; margin:0 auto; }
+  }
 </style>
 </head>
 <body>
 
+<div class="stars" id="stars"></div>
 <div class="cosmic-bg"></div>
-<div class="cosmic-glow-3"></div>
-<canvas id="stars-canvas"></canvas>
+<div class="cosmic-mid"></div>
 
-<!-- INTENTION BLOCK -->
-<div class="intention-block">
-  <div class="intention-eyebrow">Selection Phase &middot; Step 3 of 7</div>
-  <div class="intention-declaration">I am releasing what no longer serves me.</div>
-  <div class="intention-sub">Set this intention before you begin</div>
-</div>
+<div class="page-wrap">
 
-<!-- PROGRESS BAR -->
-<div class="progress-section">
-  <div class="progress-inner">
-    <div class="progress-meta">
-      <span class="progress-phase-label">Selection Phase</span>
-      <span class="progress-step-label">Step 3 of 7</span>
-    </div>
-    <div class="progress-track">
-      <div class="progress-fill"></div>
-    </div>
-  </div>
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="content-wrap">
-
-  <!-- STEP HEADER -->
-  <div class="step-header">
-    <div class="step-badge-row">
-      <span class="step-badge">Step 3</span>
-      <span class="step-phase-eyebrow">Selection Phase</span>
-    </div>
-    <div class="step-title">Grieve and <span class="title-gradient">Release</span></div>
-    <div class="step-subtitle">Making space in your system for what is coming</div>
+  <!-- INTENTION BLOCK -->
+  <div class="intention-block">
+    <div class="phase-eyebrow">Selection Phase · Step 3 of 7</div>
+    <div class="intention-statement">I am releasing what no longer serves me, and I honor what it meant to carry it.</div>
+    <div class="intention-subtext">Set this intention before you begin</div>
   </div>
 
-  <div class="section-divider"></div>
-
-  <!-- TEACHING COPY -->
-  <div class="teaching-copy">
-    <p>Even when you are genuinely ready to leave something behind, your subconscious and your body may register that change as loss. A pattern you have outgrown, a space you lived in, an identity you wore for years, and your system built a relationship with all of it. It does not always distinguish between what was good for you and what was simply familiar. So before you move forward, you give yourself permission to grieve what you are letting go of, even the things you are glad to release.</p>
-    <p>In this step, you are acknowledging what your system may miss. That could be the identity of someone who struggles, or always falls short, or puts others first. These patterns often became your personality because, at some point, they were trying to protect you. Releasing them means your sense of who you are is also shifting, and that shift deserves to be honored, not rushed past.</p>
-    <p>This step is important not to skip. At the same time, if nothing comes up for you right now or you are not sure what you would grieve, that is okay too. Something may surface during the Stabilization phase, and when it does, you will have the tools to meet it. Below you will find several ways to support yourself through this process whenever you are ready.</p>
+  <!-- PROGRESS BAR -->
+  <div class="progress-section">
+    <div class="progress-inner">
+      <div class="progress-meta">
+        <span class="progress-label">Selection Phase</span>
+        <span class="progress-count">Step 3 of 7</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:42.86%"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- SOMATIC BLOCK -->
-  <div class="somatic-block">
-    <div class="somatic-ring-wrap">
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- STEP HEADER -->
+    <div class="step-header">
+      <div class="step-eyebrow">
+        <span class="step-number-badge-pill">Step 3</span>
+        Selection Phase
+      </div>
+      <h1 class="step-title">Grieve and <span class="gradient-word">Release</span></h1>
+      <p class="step-subtitle">Making space in your system for what is coming.</p>
+    </div>
+
+    <!-- TEACHING COPY -->
+    <div class="section-block teaching-copy">
+      <div class="section-label">The Teaching</div>
+      <p>Even when you are genuinely ready to leave something behind, your subconscious and your body may register that change as loss. A pattern you have outgrown, a space you lived in, an identity you wore for years — your system built a relationship with all of it. It does not always distinguish between what was good for you and what was simply familiar. So before you move forward, you give yourself permission to grieve what you are letting go of, even the things you are glad to release.</p>
+      <p>In this step, you are acknowledging what your system may miss. That could be the identity of someone who struggles, or always falls short, or puts others first. These patterns often became your personality because, at some point, they were trying to protect you. Releasing them means your sense of who you are is also shifting, and that shift deserves to be honored, not rushed past.</p>
+      <p>This step is important not to skip. At the same time, if nothing comes up for you right now or you are not sure what you would grieve, that is okay too. Something may surface during the Stabilization phase, and when it does, you will have the tools to meet it. Below you will find several ways to support yourself through this process whenever you are ready.</p>
+    </div>
+
+    <!-- SOMATIC BLOCK -->
+    <div class="section-block somatic-block">
       <div class="breathing-ring">
-        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="22" cy="22" r="18" stroke="#1cd6e7" stroke-width="1.2"/>
-          <circle cx="22" cy="22" r="12" stroke="#8051c8" stroke-width="1"/>
-          <circle cx="22" cy="22" r="6" stroke="#f62bd1" stroke-width="0.8"/>
-        </svg>
+        <span></span><span></span><span></span>
       </div>
-      <div class="somatic-content">
-        <div class="somatic-label">Somatic Grounding</div>
-        <p>Before you begin, place one hand on your chest and one on your belly. Take three slow breaths, letting your exhale be longer than your inhale. If emotion rises, that is the process working. Let it move.</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- REFLECTION -->
-  <div class="reflection-section">
-    <div class="reflection-heading">Your Reflection</div>
-    <div class="reflection-sub">Take as much time as you need with each prompt.</div>
-
-    <div class="tab-nav" id="reflect-tabs">
-      <button class="tab-btn active" onclick="switchTab('reflect', 0)">What You May Grieve</button>
-      <button class="tab-btn" onclick="switchTab('reflect', 1)">The Identity Shift</button>
+      <div class="somatic-heading">Before You Write</div>
+      <p>Before you begin, place one hand on your chest and one on your belly. Take three slow breaths, letting your exhale be longer than your inhale. If emotion rises, that is the process working. Let it move.</p>
     </div>
 
-    <!-- REFLECT 0 -->
-    <div class="tab-panel active" id="reflect-panel-0">
-      <div class="reflection-card">
-        <div class="reflection-starter">Starter Phrase</div>
-        <p>My system may grieve the loss of...</p>
-      </div>
-      <textarea id="resp-0" placeholder="Write freely. Include patterns, beliefs, relationships, habits, identities, anything your body or subconscious may have leaned on, even if you are glad to let it go." oninput="saveToStorage('resp-0')"></textarea>
-      <div class="save-notice">This page does not save your responses. Save when done or transfer to your favourite journal.</div>
+    <!-- REFLECTION -->
+    <div class="section-block">
+      <div class="section-label">Your Reflection</div>
+
       <div class="layer-nav">
-        <span></span>
-        <button class="btn-forward" onclick="switchTab('reflect', 1)">Next</button>
+        <button class="layer-tab active" data-layer="grieve"   onclick="switchReflect('grieve')">What You May Grieve</button>
+        <button class="layer-tab"        data-layer="identity" onclick="switchReflect('identity')">The Identity Shift</button>
       </div>
-    </div>
 
-    <!-- REFLECT 1 -->
-    <div class="tab-panel" id="reflect-panel-1">
-      <div class="reflection-card">
-        <div class="reflection-starter">Starter Phrase</div>
-        <p>The identity I am leaving behind is... and the person I am becoming is...</p>
-      </div>
-      <textarea id="resp-1" placeholder="Describe both sides. Who have you been showing up as? Who is beginning to emerge? Give both of them space here." oninput="saveToStorage('resp-1')"></textarea>
-      <div class="save-notice">This page does not save your responses. Save when done or transfer to your favourite journal.</div>
-      <div class="layer-nav">
-        <button class="btn-ghost" onclick="switchTab('reflect', 0)">Back</button>
-        <div id="done-area" style="display:flex;align-items:center;gap:12px;">
-          <button class="btn-done" id="done-btn" onclick="copyResponses()">Copy My Responses</button>
-          <span class="copy-confirm" id="copy-confirm" style="display:none;font-family:'Inter',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.1em;color:var(--cyan);">&#10003; Copied</span>
+      <!-- GRIEVE -->
+      <div class="reflection-layer active" id="layer-grieve">
+        <div class="reflection-card">
+          <p class="reflection-prompt">Look at what your system may miss. Include patterns, beliefs, relationships, habits, identities — anything your body or subconscious may have leaned on, even if you are glad to let it go.</p>
+          <span class="starter-phrase">My system may grieve the loss of...</span>
+          <textarea id="ta-grieve" placeholder="Write freely. Let it be honest and specific." oninput="autosave('grieve')"></textarea>
+        </div>
+        <div class="layer-controls">
+          <div></div>
+          <button class="btn-primary" onclick="switchReflect('identity')">Identity Shift →</button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- WAYS TO RELEASE -->
-  <div class="release-section">
-    <div class="reflection-heading">Ways to Release</div>
-    <div class="reflection-sub">Choose what feels right for you. You do not need to use all of these.</div>
-
-    <div class="tab-nav tab-nav--pills" id="release-tabs">
-      <button class="tab-btn active" onclick="switchTab('release', 0)">Release</button>
-      <button class="tab-btn" onclick="switchTab('release', 1)">Speak to the Part</button>
-      <button class="tab-btn" onclick="switchTab('release', 2)">Ho'oponopono</button>
-      <button class="tab-btn" onclick="switchTab('release', 3)">Forgiveness</button>
-      <button class="tab-btn" onclick="switchTab('release', 4)">EFT Tapping</button>
-    </div>
-
-    <!-- RELEASE 0 -->
-    <div class="tab-panel active" id="release-panel-0">
-      <div class="tool-list">
-        <div class="tool-item"><div class="tool-name">Feel it</div><div class="tool-desc">Allow the emotion to rise without pushing it away. You do not need to analyze it. Your body knows how to move energy when you give it permission.</div></div>
-        <div class="tool-item"><div class="tool-name">Cry</div><div class="tool-desc">If tears come, let them. Suppressing a cry keeps that energy stored in the body. Crying is a release, not a sign that something is wrong.</div></div>
-        <div class="tool-item"><div class="tool-name">Speak it out</div><div class="tool-desc">Go to a mirror and speak to yourself about what you are letting go of. Tell yourself it is safe to release it. Hearing your own voice say the words can shift something that writing alone cannot.</div></div>
-        <div class="tool-item"><div class="tool-name">Shake</div><div class="tool-desc">Shaking is one of the body's natural ways of completing a stress cycle. Stand and let your body shake loosely for a few minutes, without forcing it into a pattern.</div></div>
-        <div class="tool-item"><div class="tool-name">Journal and burn</div><div class="tool-desc">Write out what you are releasing on paper. Then rip it out and throw it away or burn it in a safe place. The physical act signals to your system that you are letting this go intentionally.</div></div>
-        <div class="tool-item"><div class="tool-name">Send it to Source</div><div class="tool-desc">Close your eyes and picture whatever you are releasing gathering into a ball of energy outside your body. Then send it upward to source energy, that overarching field of light, to be transmuted. You do not need to hold it anymore.</div></div>
-      </div>
-    </div>
-
-    <!-- RELEASE 1: SPEAK TO THE PART -->
-    <div class="tab-panel" id="release-panel-1">
-      <div class="parts-section">
-        <div class="parts-title">How to Speak to the Part</div>
-        <div class="parts-desc">Use this when a pattern is not shifting through feeling or journaling alone. It works by finding the part of you that is running the pattern and giving it a new role instead of trying to fight or eliminate it.</div>
-        <div class="parts-step"><div class="parts-step-label">Step 1: Identify</div><p>Name the feeling or pattern. Example: I keep overcommitting and burning out.</p></div>
-        <div class="parts-step"><div class="parts-step-label">Step 2: Separate Slightly</div><p>Instead of "I am this way," say "a part of me does this." That small shift opens space between you and the pattern.</p></div>
-        <div class="parts-step"><div class="parts-step-label">Step 3: Get Curious</div><p>Ask the part: What are you trying to protect me from? When did I first feel this way? What do you need?</p></div>
-        <div class="parts-step"><div class="parts-step-label">Step 4: Listen</div><p>Quiet your mind, take a few breaths, and notice the first thought, feeling, or image that surfaces. Common answers: if I disappoint people, they will leave. If I slow down, I will lose control.</p></div>
-        <div class="parts-step"><div class="parts-step-label">Step 5: Acknowledge</div><p>Say to this part: thank you for trying to protect me. You do not have to carry this anymore. I am not the same person I was.</p></div>
-        <div class="parts-step"><div class="parts-step-label">Step 6: Choose a New Role or Release</div><p>Ask the part: are you ready to go, or do you want a new role? If it is ready to go, imagine it being transmuted out of your body. If it wants a new role, tell it what you need from it now and wait for its agreement before completing.</p></div>
-      </div>
-      <textarea id="resp-2" placeholder="Use this space for any notes as you work through the steps above. It is here if you need it." oninput="saveToStorage('resp-2')"></textarea>
-      <div class="save-notice">This page does not save your responses. Save when done or transfer to your favourite journal.</div>
-    </div>
-
-    <!-- RELEASE 2: HO'OPONOPONO -->
-    <div class="tab-panel" id="release-panel-2">
-      <div class="hooponopono-block">
-        <div class="parts-title">Ho'oponopono</div>
-        <div class="parts-desc">Ho'oponopono is a Hawaiian forgiveness practice. Before you begin, know that this is not about taking blame. We do not always know what is at play on a soul level, but Source does. If something is ready to be cleared, these phrases will clear it. Start by completing the opening line below, naming what you want to release. Then move through the four phrases slowly, repeating them as many times as feels right, and let whatever arises come through.</div>
-        <div class="phrase-list">
-          <div class="phrase-item phrase-item--open">Source, what is it within me that <span class="phrase-blank">_______________________</span> ?</div>
-          <div class="phrase-item">I'm sorry.</div>
-          <div class="phrase-item">Please forgive me.</div>
-          <div class="phrase-item">Thank you.</div>
-          <div class="phrase-item">I love you.</div>
+      <!-- IDENTITY SHIFT -->
+      <div class="reflection-layer" id="layer-identity">
+        <div class="reflection-card">
+          <p class="reflection-prompt">Describe both sides. Who have you been showing up as? Who is beginning to emerge? Give both of them space here.</p>
+          <span class="starter-phrase">The identity I am leaving behind is... and the person I am becoming is...</span>
+          <textarea id="ta-identity" placeholder="Write both sides. Let whatever comes up move through you." oninput="autosave('identity')"></textarea>
+        </div>
+        <div class="layer-controls">
+          <button class="btn-ghost" onclick="switchReflect('grieve')">← What You May Grieve</button>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+            <button class="btn-copy-responses" onclick="copyResponses()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Copy My Responses
+            </button>
+            <span class="copy-confirm" id="copy-confirm">✓ Copied to clipboard</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- RELEASE 3: FORGIVENESS -->
-    <div class="tab-panel" id="release-panel-3">
-      <div class="parts-section">
-        <div class="parts-title">Forgiving Yourself</div>
-        <div class="parts-desc">For this practice you can journal it, say the words out loud, or speak them to yourself in the mirror while looking into your own eyes. You do not have to believe the words fully yet. Saying them sets the intention that you are willing to let this go. Allow any emotion that surfaces to move through you as you do.</div>
-        <div class="parts-step"><div class="parts-step-label">Starter Phrase</div><p>I forgive myself for... I forgive myself for... I forgive myself for...</p></div>
+    <!-- WAYS TO RELEASE -->
+    <div class="section-block">
+      <div class="section-label">Ways to Release</div>
+      <p style="font-family:'Inter',sans-serif;font-weight:300;font-size:14px;color:var(--text-sec);line-height:1.7;margin-bottom:24px;">Choose what feels right for you. You do not need to use all of these.</p>
+
+      <div class="pill-nav">
+        <button class="pill-tab active" onclick="switchRelease('release')">Release</button>
+        <button class="pill-tab" onclick="switchRelease('parts')">Speak to the Part</button>
+        <button class="pill-tab" onclick="switchRelease('hooponopono')">Ho'oponopono</button>
+        <button class="pill-tab" onclick="switchRelease('forgiveness')">Forgiveness</button>
+        <button class="pill-tab" onclick="switchRelease('eft')">EFT Tapping</button>
       </div>
-      <textarea id="resp-3" placeholder="Write your forgiveness statements here, one by one. Let whatever comes up move through you." oninput="saveToStorage('resp-3')"></textarea>
-      <div class="save-notice">This page does not save your responses. Save when done or transfer to your favourite journal.</div>
+
+      <!-- RELEASE -->
+      <div class="release-layer active" id="release-release">
+        <div class="tool-list">
+          <div class="tool-item"><div class="tool-name">Feel it</div><div class="tool-desc">Allow the emotion to rise without pushing it away. You do not need to analyze it. Your body knows how to move energy when you give it permission.</div></div>
+          <div class="tool-item"><div class="tool-name">Cry</div><div class="tool-desc">If tears come, let them. Suppressing a cry keeps that energy stored in the body. Crying is a release, not a sign that something is wrong.</div></div>
+          <div class="tool-item"><div class="tool-name">Speak it out</div><div class="tool-desc">Go to a mirror and speak to yourself about what you are letting go of. Tell yourself it is safe to release it. Hearing your own voice say the words can shift something that writing alone cannot.</div></div>
+          <div class="tool-item"><div class="tool-name">Shake</div><div class="tool-desc">Shaking is one of the body's natural ways of completing a stress cycle. Stand and let your body shake loosely for a few minutes, without forcing it into a pattern.</div></div>
+          <div class="tool-item"><div class="tool-name">Journal and burn</div><div class="tool-desc">Write out what you are releasing on paper. Then rip it out and throw it away or burn it in a safe place. The physical act signals to your system that you are letting this go intentionally.</div></div>
+          <div class="tool-item"><div class="tool-name">Send it to Source</div><div class="tool-desc">Close your eyes and picture whatever you are releasing gathering into a ball of energy outside your body. Then send it upward to Source energy to be transmuted. You do not need to hold it anymore.</div></div>
+        </div>
+      </div>
+
+      <!-- SPEAK TO THE PART -->
+      <div class="release-layer" id="release-parts">
+        <div class="guide-card">
+          <div class="guide-title">How to Speak to the Part</div>
+          <div class="guide-desc">Use this when a pattern is not shifting through feeling or journaling alone. It works by finding the part of you that is running the pattern and giving it a new role instead of trying to fight or eliminate it.</div>
+          <div class="guide-step"><div class="guide-step-label">Step 1 — Identify</div><p>Name the feeling or pattern. Example: I keep overcommitting and burning out.</p></div>
+          <div class="guide-step"><div class="guide-step-label">Step 2 — Separate Slightly</div><p>Instead of "I am this way," say "a part of me does this." That small shift opens space between you and the pattern.</p></div>
+          <div class="guide-step"><div class="guide-step-label">Step 3 — Get Curious</div><p>Ask the part: What are you trying to protect me from? When did I first feel this way? What do you need?</p></div>
+          <div class="guide-step"><div class="guide-step-label">Step 4 — Listen</div><p>Quiet your mind, take a few breaths, and notice the first thought, feeling, or image that surfaces. Common answers: if I disappoint people, they will leave. If I slow down, I will lose control.</p></div>
+          <div class="guide-step"><div class="guide-step-label">Step 5 — Acknowledge</div><p>Say to this part: thank you for trying to protect me. You do not have to carry this anymore. I am not the same person I was.</p></div>
+          <div class="guide-step"><div class="guide-step-label">Step 6 — Choose a New Role or Release</div><p>Ask the part: are you ready to go, or do you want a new role? If it is ready to go, imagine it being transmuted out of your body. If it wants a new role, tell it what you need from it now and wait for its agreement before completing.</p></div>
+        </div>
+        <textarea id="ta-parts" placeholder="Use this space for any notes as you work through the steps above." oninput="autosave('parts')"></textarea>
+      </div>
+
+      <!-- HO'OPONOPONO -->
+      <div class="release-layer" id="release-hooponopono">
+        <div class="guide-card">
+          <div class="guide-title">Ho'oponopono</div>
+          <div class="guide-desc">Ho'oponopono is a Hawaiian forgiveness practice. This is not about taking blame. We do not always know what is at play on a soul level, but Source does. If something is ready to be cleared, these phrases will clear it. Start by completing the opening line below, naming what you want to release. Then move through the four phrases slowly, repeating them as many times as feels right.</div>
+          <div class="phrase-list">
+            <div class="phrase-item phrase-item--open">Source, what is it within me that <span class="phrase-blank">_______________________</span>?</div>
+            <div class="phrase-item">I'm sorry.</div>
+            <div class="phrase-item">Please forgive me.</div>
+            <div class="phrase-item">Thank you.</div>
+            <div class="phrase-item">I love you.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORGIVENESS -->
+      <div class="release-layer" id="release-forgiveness">
+        <div class="guide-card">
+          <div class="guide-title">Forgiving Yourself</div>
+          <div class="guide-desc">You can journal it, say the words out loud, or speak them to yourself in the mirror while looking into your own eyes. You do not have to believe the words fully yet. Saying them sets the intention that you are willing to let this go. Allow any emotion that surfaces to move through you.</div>
+          <div class="guide-step"><div class="guide-step-label">Starter Phrase</div><p>I forgive myself for... I forgive myself for... I forgive myself for...</p></div>
+        </div>
+        <textarea id="ta-forgiveness" placeholder="Write your forgiveness statements here, one by one. Let whatever comes up move through you." oninput="autosave('forgiveness')"></textarea>
+      </div>
+
+      <!-- EFT TAPPING -->
+      <div class="release-layer" id="release-eft">
+        <p class="eft-intro">EFT (Emotional Freedom Technique) works by tapping on specific points on the body while speaking what you are feeling out loud. The act of combining physical touch with voiced emotion helps signal safety to your nervous system, allowing stuck energy to move and releasing the emotional charge around a thought or memory.</p>
+        <div class="eft-steps">
+          <div class="eft-step">
+            <div class="eft-step-label">Step 1 — Create your set-up statement</div>
+            <div class="eft-step-body">While tapping the karate chop point, repeat your set-up statement three times. Use the format: <span class="eft-highlight">Even though I feel ___, I deeply and completely accept myself.</span></div>
+          </div>
+          <div class="eft-step">
+            <div class="eft-step-label">Step 2 — Tap through the points</div>
+            <div class="eft-step-body">Move through points 2 to 9 in order. As you tap each one, speak whatever thoughts are sitting heaviest in you. Say it all. Let the words be raw and honest. You are not performing, you are releasing.</div>
+          </div>
+          <div class="eft-step">
+            <div class="eft-step-label">Step 3 — Shift toward support</div>
+            <div class="eft-step-body">Once you feel you have gotten it off your chest, begin offering yourself more supportive phrases as you continue tapping. Try: <span class="eft-highlight">I was doing the best I could. I am always learning. I love myself.</span></div>
+          </div>
+          <div class="eft-step">
+            <div class="eft-step-label">Step 4 — Close at the crown</div>
+            <div class="eft-step-body">Aim to finish your final round by tapping on the top of your head. Take a breath. Notice how you feel. Repeat as many rounds as you need until you feel a shift.</div>
+          </div>
+          <div class="eft-step eft-step--note">
+            <div class="eft-step-body">There is a full EFT guide available in the Skool community if you would like more support with this practice.</div>
+          </div>
+        </div>
+        <div class="eft-layout">
+          <div class="eft-diagram-wrap">
+            <svg viewBox="0 0 260 420" xmlns="http://www.w3.org/2000/svg" class="eft-svg">
+              <g transform="translate(15,10) scale(1.18)">
+              <ellipse cx="110" cy="68" rx="46" ry="54" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <ellipse cx="96" cy="62" rx="7" ry="4.5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <ellipse cx="124" cy="62" rx="7" ry="4.5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <circle cx="96" cy="62" r="2.5" fill="rgba(255,255,255,0.2)"/>
+              <circle cx="124" cy="62" r="2.5" fill="rgba(255,255,255,0.2)"/>
+              <path d="M87 54 Q96 50 105 54" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M115 54 Q124 50 133 54" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <path d="M110 68 Q107 76 104 78 Q110 81 116 78 Q113 76 110 68" fill="rgba(255,255,255,0.1)"/>
+              <path d="M101 88 Q110 93 119 88" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+              <ellipse cx="64" cy="72" rx="6" ry="10" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <ellipse cx="156" cy="72" rx="6" ry="10" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <rect x="100" y="118" width="20" height="20" rx="4" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <path d="M55 145 Q55 138 75 136 L100 134 L110 136 L120 134 L145 136 Q165 138 165 145 L165 260 Q165 268 157 268 L63 268 Q55 268 55 260 Z" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <path d="M55 148 Q40 152 36 165 L34 210 Q33 218 40 218 L52 218 Q58 218 58 210 L58 165 Z" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <ellipse cx="43" cy="226" rx="12" ry="8" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <path d="M165 148 Q180 152 184 165 L186 210 Q187 218 180 218 L168 218 Q162 218 162 210 L162 165 Z" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <ellipse cx="177" cy="226" rx="12" ry="8" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+              <circle cx="33" cy="228" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="33" y="232" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">1</text>
+              <circle cx="110" cy="16" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="110" y="20" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">2</text>
+              <circle cx="110" cy="50" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="110" y="54" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">3</text>
+              <circle cx="148" cy="62" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="148" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">4</text>
+              <circle cx="128" cy="75" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="128" y="79" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">5</text>
+              <circle cx="110" cy="85" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="110" y="89" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">6</text>
+              <circle cx="110" cy="106" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="110" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">7</text>
+              <circle cx="88" cy="152" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="88" y="156" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">8</text>
+              <circle cx="55" cy="195" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
+              <text x="55" y="199" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">9</text>
+              </g>
+            </svg>
+          </div>
+          <div class="eft-sequence">
+            <div class="eft-point-row"><span class="eft-num">1</span><div class="eft-point-info"><span class="eft-label">Karate Chop</span><span class="eft-note">Pinky side of hand. Say your set-up statement here three times.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">2</span><div class="eft-point-info"><span class="eft-label">Top of Head</span><span class="eft-note">Crown, center. Begin and end here.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">3</span><div class="eft-point-info"><span class="eft-label">Eyebrow</span><span class="eft-note">Inner edge where the brow begins.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">4</span><div class="eft-point-info"><span class="eft-label">Side of Eye</span><span class="eft-note">Outer corner of the eye socket, on the bone.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">5</span><div class="eft-point-info"><span class="eft-label">Under Eye</span><span class="eft-note">On the cheekbone directly below the pupil.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">6</span><div class="eft-point-info"><span class="eft-label">Under Nose</span><span class="eft-note">The groove between nose and upper lip.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">7</span><div class="eft-point-info"><span class="eft-label">Chin</span><span class="eft-note">Crease between lower lip and chin.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">8</span><div class="eft-point-info"><span class="eft-label">Collarbone</span><span class="eft-note">Just below where the collarbones meet the sternum.</span></div></div>
+            <div class="eft-point-row"><span class="eft-num">9</span><div class="eft-point-info"><span class="eft-label">Under Arm</span><span class="eft-note">Side of the torso, about four inches below the armpit.</span></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /ways to release section-block -->
+
+    <!-- SAVE YOUR WORK -->
+    <div class="export-section">
+      <h3 class="save-title">Save Your Work</h3>
+      <p class="save-description">Your responses are not saved automatically. Use the Copy My Responses button above to copy them, then paste into your notes app on your phone or computer.</p>
     </div>
 
-    <!-- RELEASE 4: EFT TAPPING -->
-    <div class="tab-panel" id="release-panel-4">
-      <div class="eft-what">
-        <p>EFT (Emotional Freedom Technique) works by tapping on specific points on the body while speaking what you are feeling out loud. The act of combining physical touch with voiced emotion helps signal safety to your nervous system, allowing stuck energy to move and releasing the emotional charge around a thought or memory.</p>
-      </div>
-      <div class="eft-steps">
-        <div class="eft-step">
-          <div class="eft-step-label">Step 1 — Create your set-up statement</div>
-          <div class="eft-step-body">While tapping the karate chop point, repeat your set-up statement three times. This is where you name what you are feeling without judgment. Use the format: <span class="eft-highlight">Even though I feel ___, I deeply and completely accept myself.</span></div>
-        </div>
-        <div class="eft-step">
-          <div class="eft-step-label">Step 2 — Tap through the points</div>
-          <div class="eft-step-body">Move through points 2 to 9 in order. As you tap each one, speak whatever thoughts are sitting heaviest in you. Say it all. Let the words be raw and honest. You are not performing, you are releasing.</div>
-        </div>
-        <div class="eft-step">
-          <div class="eft-step-label">Step 3 — Shift toward support</div>
-          <div class="eft-step-body">Once you feel you have gotten it off your chest, begin offering yourself more supportive phrases as you continue tapping. Try: <span class="eft-highlight">I was doing the best I could. I am always learning. I love myself.</span> Let whatever feels true come through.</div>
-        </div>
-        <div class="eft-step">
-          <div class="eft-step-label">Step 4 — Close at the crown</div>
-          <div class="eft-step-body">Aim to finish your final round by tapping on the top of your head. Take a breath. Notice how you feel. Repeat as many rounds as you need until you feel a shift.</div>
-        </div>
-        <div class="eft-step eft-step--note">
-          <div class="eft-step-body">There is a full EFT guide available in the Skool community if you would like more support with this practice.</div>
-        </div>
-      </div>
-
-      <div class="eft-layout">
-        <div class="eft-diagram-wrap">
-          <svg viewBox="0 0 260 420" xmlns="http://www.w3.org/2000/svg" class="eft-svg">
-            <g transform="translate(15,10) scale(1.18)">
-            <ellipse cx="110" cy="68" rx="46" ry="54" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <ellipse cx="96" cy="62" rx="7" ry="4.5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <ellipse cx="124" cy="62" rx="7" ry="4.5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-            <circle cx="96" cy="62" r="2.5" fill="rgba(255,255,255,0.2)"/>
-            <circle cx="124" cy="62" r="2.5" fill="rgba(255,255,255,0.2)"/>
-            <path d="M87 54 Q96 50 105 54" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <path d="M115 54 Q124 50 133 54" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <path d="M110 68 Q107 76 104 78 Q110 81 116 78 Q113 76 110 68" fill="rgba(255,255,255,0.1)" stroke="none"/>
-            <path d="M101 88 Q110 93 119 88" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-            <ellipse cx="64" cy="72" rx="6" ry="10" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <ellipse cx="156" cy="72" rx="6" ry="10" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <rect x="100" y="118" width="20" height="20" rx="4" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <path d="M55 145 Q55 138 75 136 L100 134 L110 136 L120 134 L145 136 Q165 138 165 145 L165 260 Q165 268 157 268 L63 268 Q55 268 55 260 Z" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <path d="M55 148 Q40 152 36 165 L34 210 Q33 218 40 218 L52 218 Q58 218 58 210 L58 165 Z" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <ellipse cx="43" cy="226" rx="12" ry="8" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <path d="M165 148 Q180 152 184 165 L186 210 Q187 218 180 218 L168 218 Q162 218 162 210 L162 165 Z" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <ellipse cx="177" cy="226" rx="12" ry="8" fill="rgba(30,26,62,0.8)" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
-            <!-- TAP POINTS -->
-            <circle cx="33" cy="228" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="33" y="232" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">1</text>
-            <circle cx="110" cy="16" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="110" y="20" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">2</text>
-            <circle cx="110" cy="50" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="110" y="54" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">3</text>
-            <circle cx="148" cy="62" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="148" y="66" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">4</text>
-            <circle cx="128" cy="75" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="128" y="79" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">5</text>
-            <circle cx="110" cy="85" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="110" y="89" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">6</text>
-            <circle cx="110" cy="106" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="110" y="110" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">7</text>
-            <circle cx="88" cy="152" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="88" y="156" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">8</text>
-            <circle cx="55" cy="195" r="10" fill="#1cd6e7" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-            <text x="55" y="199" text-anchor="middle" font-family="Inter,sans-serif" font-size="9" font-weight="700" fill="#0a0a1f">9</text>
-            </g>
-          </svg>
-        </div>
-        <div class="eft-sequence">
-          <div class="eft-point-row"><span class="eft-num">1</span><div class="eft-point-info"><span class="eft-label">Karate Chop</span><span class="eft-note">Pinky side of hand. Say your set-up statement here three times.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">2</span><div class="eft-point-info"><span class="eft-label">Top of Head</span><span class="eft-note">Crown, center. Begin and end here.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">3</span><div class="eft-point-info"><span class="eft-label">Eyebrow</span><span class="eft-note">Inner edge where the brow begins.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">4</span><div class="eft-point-info"><span class="eft-label">Side of Eye</span><span class="eft-note">Outer corner of the eye socket, on the bone.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">5</span><div class="eft-point-info"><span class="eft-label">Under Eye</span><span class="eft-note">On the cheekbone directly below the pupil.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">6</span><div class="eft-point-info"><span class="eft-label">Under Nose</span><span class="eft-note">The groove between nose and upper lip.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">7</span><div class="eft-point-info"><span class="eft-label">Chin</span><span class="eft-note">Crease between lower lip and chin.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">8</span><div class="eft-point-info"><span class="eft-label">Collarbone</span><span class="eft-note">Just below where the collarbones meet the sternum.</span></div></div>
-          <div class="eft-point-row"><span class="eft-num">9</span><div class="eft-point-info"><span class="eft-label">Under Arm</span><span class="eft-note">Side of the torso, about four inches below the armpit.</span></div></div>
-        </div>
-      </div>
+    <!-- FOOTER STACK -->
+    <div class="footer-stack">
+      <a href="https://ceydaseren.github.io/timelinejumpingstep4/" class="btn-next-step">Go to Next Step</a>
+      <a href="https://www.skool.com/timeline-jumpers-9976/classroom" target="_blank" class="btn-skool">Take Me Back to Skool</a>
     </div>
 
-  </div><!-- /release-section -->
+  </div><!-- /main-content -->
 
-  <!-- EXPORT -->
-  <div class="export-section">
-    <div class="export-heading">Save Your Work</div>
-    <div class="export-desc">Your responses are not saved automatically. Use the Copy My Responses button above to copy them, then paste into your notes app on your phone or computer.</div>
-  </div>
+  <div class="copyright">© 2026 Ceyda Seren. All rights reserved.</div>
 
-</div><!-- /content-wrap -->
-
-<div class="skool-btn-wrap">
-  <a href="https://www.skool.com/timeline-jumpers-9976/classroom" target="_blank" class="btn-skool">Take Me Back to Skool</a>
-</div>
-
-<div class="copyright-bar">&#169; 2026 Ceyda Seren. All rights reserved.</div>
-
-<div class="toast" id="toast">Responses copied to clipboard</div>
+</div><!-- /page-wrap -->
 
 <script>
-sessionStorage.clear();
-
-// STARS
-(function() {
-  const canvas = document.getElementById('stars-canvas');
-  const ctx = canvas.getContext('2d');
-  let stars = [];
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  function init() {
-    resize();
-    stars = [];
-    for (let i = 0; i < 120; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        r: Math.random() * 1.2 + 0.3,
-        op: Math.random(),
-        speed: Math.random() * 0.008 + 0.003,
-        phase: Math.random() * Math.PI * 2
-      });
-    }
+  // ── STARS ──
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.5;
+    s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*4}s;--op:${0.3+Math.random()*0.6};`;
+    starsEl.appendChild(s);
   }
-  function draw(t) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    stars.forEach(s => {
-      const opacity = 0.2 + 0.6 * (0.5 + 0.5 * Math.sin(s.phase + t * s.speed));
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(248,245,255,${opacity})`;
-      ctx.fill();
+
+  // ── CURSOR TRAIL — desktop only ──
+  if (!('ontouchstart' in window)) {
+    const colors = ['#1cd6e7','#8051c8','#f62bd1','#f4a749'];
+    let moveCount = 0;
+    document.addEventListener('mousemove', e => {
+      moveCount++;
+      const dot = document.createElement('div');
+      dot.className = 'cursor-dot';
+      const size = 4 + Math.random() * 4;
+      const color = colors[Math.floor(Math.random()*colors.length)];
+      dot.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:${size}px;height:${size}px;background:${color};box-shadow:0 0 6px ${color};`;
+      document.body.appendChild(dot);
+      setTimeout(() => dot.remove(), 600);
+      if (moveCount % 15 === 0) {
+        const spark = document.createElement('div');
+        spark.className = 'cursor-sparkle';
+        spark.textContent = '✦';
+        spark.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;color:${color};`;
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 800);
+      }
     });
-    requestAnimationFrame(draw);
   }
-  window.addEventListener('resize', init);
-  init();
-  requestAnimationFrame(draw);
-})();
 
-// CURSOR TRAIL — desktop only
-(function() {
-  if ('ontouchstart' in window) return;
-  let moveCount = 0;
-  const colors = ['#1cd6e7', '#8051c8', '#f62bd1', '#f4a749'];
-  document.addEventListener('mousemove', function(e) {
-    if (Math.random() > 0.6) return;
-    moveCount++;
-    const dot = document.createElement('div');
-    dot.className = 'cursor-dot';
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    const size = Math.random() * 5 + 3;
-    dot.style.cssText = `left:${e.clientX - size/2}px;top:${e.clientY - size/2}px;width:${size}px;height:${size}px;background:${color};box-shadow:0 0 8px ${color};`;
-    document.body.appendChild(dot);
-    setTimeout(() => dot.remove(), 700);
-    if (moveCount % 15 === 0) {
-      const spark = document.createElement('div');
-      spark.className = 'cursor-spark';
-      spark.textContent = '\u2736';
-      spark.style.cssText = `left:${e.clientX-6}px;top:${e.clientY-6}px;color:${color};text-shadow:0 0 8px ${color};`;
-      document.body.appendChild(spark);
-      setTimeout(() => spark.remove(), 900);
-    }
+  // ── TAP RIPPLE — mobile only ──
+  if ('ontouchstart' in window) {
+    document.addEventListener('touchstart', e => {
+      const t = e.touches[0];
+      const r = document.createElement('div');
+      r.style.cssText = `position:fixed;left:${t.clientX-30}px;top:${t.clientY-30}px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(28,214,231,0.45) 0%,transparent 70%);pointer-events:none;z-index:9999;transform:scale(0);animation:tapRipple 0.5s ease forwards;`;
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 500);
+    }, { passive: true });
+  }
+
+  // ── SESSION STORAGE ──
+  function autosave(key) {
+    sessionStorage.setItem('tj_step3_' + key, document.getElementById('ta-' + key)?.value || '');
+  }
+  ['grieve','identity','parts','forgiveness'].forEach(k => {
+    const saved = sessionStorage.getItem('tj_step3_' + k);
+    const el = document.getElementById('ta-' + k);
+    if (saved && el) el.value = saved;
   });
-})();
 
-// TAP RIPPLE — mobile only
-(function() {
-  if (!('ontouchstart' in window)) return;
-  document.addEventListener('touchstart', function(e) {
-    const touch = e.touches[0];
-    const ripple = document.createElement('div');
-    ripple.style.cssText = `
-      position:fixed;
-      left:${touch.clientX - 30}px;
-      top:${touch.clientY - 30}px;
-      width:60px;height:60px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(28,214,231,0.45) 0%, transparent 70%);
-      pointer-events:none;
-      z-index:9999;
-      transform:scale(0);
-      animation:tapRipple 0.5s ease forwards;
-    `;
-    document.body.appendChild(ripple);
-    setTimeout(() => ripple.remove(), 500);
-  }, { passive: true });
-})();
+  // ── LAYER SWITCHING (reflection tabs) ──
+  function switchReflect(id) {
+    document.querySelectorAll('.reflection-layer').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.layer-tab').forEach(t => t.classList.remove('active'));
+    const target = document.getElementById('layer-' + id);
+    if (target) { target.classList.add('active'); target.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+    const btn = document.querySelector(`.layer-tab[data-layer="${id}"]`);
+    if (btn) btn.classList.add('active');
+  }
 
-function saveToStorage(id) {
-  sessionStorage.setItem(id, document.getElementById(id).value);
-}
+  // ── RELEASE SWITCHING (pill tabs) ──
+  function switchRelease(id) {
+    document.querySelectorAll('.release-layer').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.pill-tab').forEach(t => t.classList.remove('active'));
+    const target = document.getElementById('release-' + id);
+    if (target) { target.classList.add('active'); target.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+    event.target.classList.add('active');
+  }
 
-function switchTab(group, index) {
-  document.querySelectorAll('#' + group + '-tabs .tab-btn').forEach((btn, i) => btn.classList.toggle('active', i === index));
-  document.querySelectorAll('[id^="' + group + '-panel-"]').forEach((panel, i) => panel.classList.toggle('active', i === index));
-}
+  // ── COPY — canonical ──
+  function copyResponses() {
+    const grieve   = document.getElementById('ta-grieve')?.value.trim() || '';
+    const identity = document.getElementById('ta-identity')?.value.trim() || '';
+    const parts    = document.getElementById('ta-parts')?.value.trim() || '';
+    const forgive  = document.getElementById('ta-forgiveness')?.value.trim() || '';
 
+    const compiled = [
+      'TIMELINE JUMPERS — Step 3: Grieve and Release',
+      '-'.repeat(50), '',
+      'WHAT YOU MAY GRIEVE', 'My system may grieve the loss of...',
+      grieve || '(not yet written)', '',
+      'THE IDENTITY SHIFT', 'The identity I am leaving behind is... and the person I am becoming is...',
+      identity || '(not yet written)',
+      ...(parts    ? ['', 'SPEAK TO THE PART — NOTES', parts] : []),
+      ...(forgive  ? ['', 'FORGIVENESS', forgive] : []),
+    ].join('\n');
 
-function copyResponses() {
-  const labels = ['What You May Grieve', 'The Identity Shift'];
-  let text = 'STEP 3: GRIEVE AND RELEASE\n==========================\n\n';
-  labels.forEach((label, i) => {
-    const el = document.getElementById('resp-' + i);
-    text += label.toUpperCase() + '\n' + (el && el.value.trim() ? el.value.trim() : '(no response)') + '\n\n';
-  });
-  const notesEl = document.getElementById('resp-2');
-  if (notesEl && notesEl.value.trim()) { text += 'SPEAK TO THE PART — NOTES\n' + notesEl.value.trim() + '\n\n'; }
-  const forgiveEl = document.getElementById('resp-3');
-  if (forgiveEl && forgiveEl.value.trim()) { text += 'FORGIVENESS\n' + forgiveEl.value.trim() + '\n\n'; }
-  try {
-    const el = document.createElement('textarea');
-    el.value = text; el.setAttribute('readonly',''); el.style.cssText='position:absolute;left:-9999px;';
-    document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
     const confirm = document.getElementById('copy-confirm');
-    if (confirm) { confirm.style.display = 'inline'; setTimeout(() => confirm.style.display = 'none', 3000); }
-    showToast('Responses copied to clipboard');
-  } catch(e) { showToast('Copy failed. Please copy manually'); }
-}
+    const show = () => { confirm.classList.add('show'); setTimeout(() => confirm.classList.remove('show'), 2500); };
 
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
+    navigator.clipboard.writeText(compiled).then(show).catch(() => {
+      const el = document.createElement('textarea');
+      el.value = compiled; el.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(el); el.select();
+      document.execCommand('copy'); document.body.removeChild(el);
+      show();
+    });
+  }
 </script>
 </body>
 </html>
